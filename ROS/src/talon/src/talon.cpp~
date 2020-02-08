@@ -22,6 +22,9 @@ int main(int argc, char** argv)
 	ros::NodeHandle privateNodeHandle("~");
 	ros::NodeHandle nodeHandle;
 
+	bool invertMotor = false;
+	privateNodeHandle.getParam("invert_motor", invertMotor);
+
 	int motorNumber = 0;
 	privateNodeHandle.getParam("motor_number", motorNumber);
 	
@@ -31,21 +34,10 @@ int main(int argc, char** argv)
 	std::string speedTopic;
 	privateNodeHandle.getParam("speed_topic", speedTopic);
 
-	double kF;
-	privateNodeHandle.getParam("kF", kF);
-
-	double kP;
-	privateNodeHandle.getParam("kP", kP);
-
-	double kI;
-	privateNodeHandle.getParam("kI", kI);
-
-	double kD;
-	privateNodeHandle.getParam("kD", kD);
-
 	ctre::phoenix::platform::can::setCANInterface("can0");
 	
 	talonSRX = new TalonSRX(motorNumber);
+	talonSRX->SetInverted(invertMotor);
 
 	talonSRX->SelectProfileSlot(0,0);
 	talonSRX->ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, CONFIG_TIMEOUT_MS);
@@ -55,13 +47,6 @@ int main(int argc, char** argv)
 	talonSRX->ConfigNominalOutputReverse(0, CONFIG_TIMEOUT_MS);
 	talonSRX->ConfigPeakOutputForward(0, CONFIG_TIMEOUT_MS);
 	talonSRX->ConfigPeakOutputReverse(0, CONFIG_TIMEOUT_MS);
-
-	talonSRX->Config_kF(PID_LOOP_IDX, kF, CONFIG_TIMEOUT_MS);
-	talonSRX->Config_kP(PID_LOOP_IDX, kP, CONFIG_TIMEOUT_MS);
-	talonSRX->Config_kI(PID_LOOP_IDX, kI, CONFIG_TIMEOUT_MS);
-	talonSRX->Config_kD(PID_LOOP_IDX, kD, CONFIG_TIMEOUT_MS);
-
-	talonSRX->ConfigAllowableClosedLoopError(PID_LOOP_IDX, 0, CONFIG_TIMEOUT_MS);
 
 	talonSRX->Set(ControlMode::PercentOutput, 0);
 
