@@ -1,0 +1,8 @@
+prefix=/home/abgoertz/RMC/Y19-20/RMC-Code-19-20/ROS/devel
+
+Name: talon
+Description: Description of talon
+Version: 0.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

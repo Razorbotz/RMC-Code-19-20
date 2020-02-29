@@ -1,14 +1,19 @@
 #define Phoenix_No_WPI
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #include <ctre/phoenix/unmanaged/Unmanaged.h>
-#include <ctre/phoenix/platform/can/PlatformCAN.h>
+#include <ctre/phoenix/platform/Platform.h>
 #include <ros/ros.h>
 #include <std_msgs/Float32.h>
 #include <unistd.h>
 
+using namespace ctre::phoenix;
+using namespace ctre::phoenix::platform;
+using namespace ctre::phoenix::motorcontrol;
+using namespace ctre::phoenix::motorcontrol::can;
+
 constexpr int CONFIG_TIMEOUT_MS = 30;
 
-ctre::phoenix::motorcontrol::can::TalonSRX* talonSRX;
+TalonSRX* talonSRX;
 
 void setSpeed(const std_msgs::Float32 speed)
 {
@@ -34,7 +39,7 @@ int main(int argc, char** argv)
 	std::string speedTopic;
 	privateNodeHandle.getParam("speed_topic", speedTopic);
 
-	ctre::phoenix::platform::can::setCANInterface("can0");
+        ctre::phoenix::platform::can::SetCANInterface("can0");
 	
 	talonSRX = new TalonSRX(motorNumber);
 	talonSRX->SetInverted(invertMotor);
