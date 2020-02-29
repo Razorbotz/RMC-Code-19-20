@@ -3,5 +3,6 @@
 cmake_install.cmake
 build/
 bin/
+ROS/**/lib/
 msg_gen/
 srv_gen/
